@@ -70,32 +70,29 @@ window.countNRooksSolutions = function(n) {
   return solutionsCount;
 };
 
-// return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
+// return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other.
+// this is running into trouble with the n = 0 case.
 window.findNQueensSolution = function(n) {
   let board = new Board({ n: n } ); //fixme
-  let solution;
-  let recurThruBoard = function (numQueens) {
-    if (numQueens === 0) {
-      solution = board;
+  let solution = board.rows();
+  let recurThruBoard = function (rows) {
+    if (rows === n) {
+      solution = _.map(board.rows(), function(row) {
+        return row.slice();
+      });
       return;
     }
     for (let i = 0; i < n; i++) {
-      for (let j = 0; j < n; j++) {
-        board.attributes[i][j] = 1;
-        if (board.hasAnyQueensConflicts()) {
-          board.attributes[i][j] = 0;
-        }
+      board.attributes[rows][i] = 1;
+      if (!board.hasAnyQueensConflicts()) {
+        recurThruBoard(rows + 1);
       }
+      board.attributes[rows][i] = 0;
     }
-    recurThruBoard(numQueens - 1);
   };
-  recurThruBoard(n);
+  recurThruBoard(0);
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-  if (!solution.rows().length) {
-    return [0];
-  } else {
-    return solution.rows();
-  }
+  return solution;
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other

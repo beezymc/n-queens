@@ -106,7 +106,7 @@
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      for (let i = 0; i < this.attributes[0].length; i++) {
+      for (let i = 0; i < this.attributes.n; i++) {
         if (this.hasColConflictAt(i)) {
           return true;
         }
